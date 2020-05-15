@@ -1,5 +1,6 @@
 const mysql = require('mysql');
 
+
 const pool = mysql.createPool({
     connectionLimit: 10,
     password: '',
@@ -25,6 +26,20 @@ primewaterdb.all = () => {
      });
 
 };
+
+primewaterdb.tblPayments = () => {
+
+    return new Promise((resolve, reject) =>{
+       pool.query('SELECT * FROM tbl_payments', (err, results)=>{
+           if(err){
+               return reject(err);
+           }
+           return resolve(results);
+       });
+    });
+
+};
+
 
 
 primewaterdb.one = (customerId)=>{
@@ -54,7 +69,7 @@ primewaterdb.delete = (customerId)=>{
 };
 
 
-primewaterdb.insert = (customers)=>{
+primewaterdb.registerCustomer = (customers)=>{
 
     return new Promise((resolve, reject) =>{
         pool.query("INSERT INTO tbl_customers (customerId,image,meterNo,startMeter,startDate,firstName,middleName,lastName,gender,birthDate,address,locationCode,contactNo,email,password,status) VALUES (?)",[customers], (err, results)=>{
@@ -62,7 +77,6 @@ primewaterdb.insert = (customers)=>{
                 console.log("error: ", err);
                 return reject(err);
             }
-            console.log(results);  
             return resolve(results);
         });
      });
@@ -76,11 +90,7 @@ primewaterdb.update = (test, customerId)=>{
     console.log(test)
 
     return new Promise((resolve, reject) =>{
-    //     pool.query("UPDATE tbl_customers SET image = ?, meterNo =? , startMeter = ? , startDate = ?, firstName = ?, middleName =? , lastName=?, gender=?, birthDate=?, addres=?, locationCode=?, contactNo=?, email=?,password=?,status=?WHERE customerId = ? ",[body.customerId,body.image,body.meterNo,body.startMeter, body.startDate, body.firstName, 
-    //         body.middleName,body.lastName,body.gender,body.birthDate,body.address,body.locationCode,body.contactNo,
-    //    body.email,body.password,body.status, customerId], (err, results)=>{
-           
-        // pool.query("UPDATE tbl_customers SET  ? WHERE customerId = ? ", [{ image: test.image ,meterNo: test.meterNo}, customerId], (err, results)=>{
+    
             pool.query("UPDATE tbl_customers SET ? WHERE customerId = ? ",[test, customerId], (err, results)=>{
             if(err){
                 console.log("error: ", err);
@@ -92,6 +102,23 @@ primewaterdb.update = (test, customerId)=>{
      });
 
 };
+
+primewaterdb.loginCustomer = (email, password)=>{
+
+    return new Promise((resolve, reject) =>{
+    
+            pool.query("SELECT * FROM tbl_customers WHERE email = ? AND password = ?  ",[email, password ], (err, results)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            return resolve(results);
+        });
+     });
+
+};
+
+
 
 
 
