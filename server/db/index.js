@@ -118,6 +118,38 @@ primewaterdb.loginCustomer = (email, password)=>{
 
 };
 
+primewaterdb.checkCustomerIfAlreadyExist = (email)=>{
+
+    return new Promise((resolve, reject) =>{
+    
+            pool.query("SELECT * FROM tbl_customers WHERE email = ? ",[email], (err, rows)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            return resolve(rows);
+        });
+     });
+
+};
+
+
+primewaterdb.getLastRowCustomer = ()=>{
+
+    return new Promise((resolve, reject) =>{
+    
+            pool.query("SELECT * FROM tbl_customers ORDER BY customerId DESC LIMIT 1", (err, rows)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            return resolve(rows);
+        });
+     });
+
+};
+
+
 
 
 

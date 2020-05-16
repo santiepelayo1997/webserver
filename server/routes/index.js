@@ -49,13 +49,18 @@ router.delete('/customers/:customerId', async (req,res,next) => {
 router.post('/customers', async (req,res,next) => {
     try{
         let body = req.body
-        let results = await db.registerCustomer([body.customerId,body.image,body.meterNo,body.startMeter, body.startDate, body.firstName,body.middleName,body.lastName,body.gender,body.birthDate,body.address,body.locationCode,body.contactNo,body.email,body.password,body.status]);
-   
-        res.status(200).json({
-            message: 'Successfully Registered',
-            userDetails: results
-        });
-     
+        let ifValid = await db.checkCustomerIfAlreadyExist(req.body.email);
+        if (!ifValid.length) {
+            let results = await db.registerCustomer([body.customerId,body.image,body.meterNo,body.startMeter, body.startDate, body.firstName,body.middleName,body.lastName,body.gender,body.birthDate,body.address,body.locationCode,body.contactNo,body.email,body.password,body.status]);
+            res.status(200).json({
+                message: 'Successfully Registered',
+                userDetails: results
+            });
+        }else{
+            res.status(400).json({
+                message: 'Email Already Exist!'
+            });
+        }
     }catch(e){
         console.log(e);
         res.sendStatus(500)
@@ -97,6 +102,17 @@ router.post('/login',  async (req,res,next) => {
     }
 
 });
+
+router.get('/generateCustomerId', async (req,res,next) => {
+    try{
+        let results = await db.getLastRowCustomer();
+        res.json(results[0].customerId);
+    }catch(e){
+        console.log(e);
+        res.sendStatus(500)
+    }
+});
+
 
 
 module.exports = router;
