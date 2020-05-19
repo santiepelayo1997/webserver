@@ -150,6 +150,40 @@ primewaterdb.getLastRowCustomer = ()=>{
 };
 
 
+primewaterdb.getPaymentsCustomer = (customerId)=>{
+
+    return new Promise((resolve, reject) =>{
+    
+            pool.query('SELECT * FROM tbl_payments WHERE customerId = ?',[customerId], (err, rows)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            return resolve(rows);
+        });
+     });
+
+};
+
+
+primewaterdb.getInvoicesCustomer = (customerId)=>{
+
+    return new Promise((resolve, reject) =>{
+    
+            pool.query('SELECT * FROM tbl_invoices WHERE customerId = ?',[customerId], (err, rows)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            return resolve(rows);
+        });
+     });
+
+};
+
+
+
+
 
 
 

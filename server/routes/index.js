@@ -113,6 +113,30 @@ router.get('/generateCustomerId', async (req,res,next) => {
     }
 });
 
+router.get('/payments/:customerId', async (req,res,next) => {
+    try{
+        let results = await db.getPaymentsCustomer([req.params.customerId]);
+        res.json(results);
+    }catch(e){
+        console.log(e);
+        res.sendStatus(500)
+    }
+});
+
+
+router.get('/invoices/:customerId', async (req,res,next) => {
+    try{
+        let results = await db.getInvoicesCustomer([req.params.customerId]);
+        res.json(results);
+    }catch(e){
+        console.log(e);
+        res.sendStatus(500)
+    }
+});
+
+
+
+
 
 
 module.exports = router;
