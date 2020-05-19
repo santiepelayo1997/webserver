@@ -135,6 +135,18 @@ router.get('/invoices/:customerId', async (req,res,next) => {
 });
 
 
+router.get('/invoices/payments/:invoiceId', async (req,res,next) => {
+    try{
+        let results = await db.getDetailsOfPayment([req.params.customerId]);
+        res.json(results);
+    }catch(e){
+        console.log(e);
+        res.sendStatus(500)
+    }
+});
+
+
+
 
 
 

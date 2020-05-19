@@ -170,7 +170,7 @@ primewaterdb.getInvoicesCustomer = (customerId)=>{
 
     return new Promise((resolve, reject) =>{
     
-            pool.query('SELECT * FROM tbl_invoices WHERE customerId = ?',[customerId], (err, rows)=>{
+            pool.query('SELECT * FROM tbl_invoices LEFT JOIN tbl_customers ON tbl_invoices.customerId = tbl_customers.customerId WHERE tbl_customers.customerId = ?',[customerId], (err, rows)=>{
             if(err){
                 console.log("error: ", err);
                 return reject(err);
@@ -180,6 +180,27 @@ primewaterdb.getInvoicesCustomer = (customerId)=>{
      });
 
 };
+
+
+primewaterdb.getDetailsOfPayment = (invoiceId)=>{
+
+    return new Promise((resolve, reject) =>{
+    
+            pool.query('SELECT * FROM tbl_payments LEFT JOIN tbl_invoices ON tbl_invoices.invoiceId = tbl_payments.invoiceId LEFT JOIN tbl_customers ON tbl_customers.customerId = tbl_payments.customerId WHERE tbl_invoices.invoiceId = ?',[invoiceId], (err, rows)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            return resolve(rows);
+        });
+     });
+
+};
+
+
+
+
+
 
 
 
