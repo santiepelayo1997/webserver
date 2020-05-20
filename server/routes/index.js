@@ -146,6 +146,39 @@ router.get('/invoices/payments/:invoiceId', async (req,res,next) => {
 });
 
 
+router.get('/invoices/count/:customerId', async (req,res,next) => {
+    try{
+        let results = await db.getTotalInvoices([req.params.customerId]);
+        res.json(results);
+    }catch(e){
+        console.log(e);
+        res.sendStatus(500)
+    }
+});
+
+router.get('/invoices/done/:customerId', async (req,res,next) => {
+    try{
+        let results = await db.getCountDone([req.params.customerId]);
+        res.json(results);
+    }catch(e){
+        console.log(e);
+        res.sendStatus(500)
+    }
+});
+
+router.get('/invoices/pending/:customerId', async (req,res,next) => {
+    try{
+        let results = await db.getCountPending([req.params.customerId]);
+        res.json(results);
+    }catch(e){
+        console.log(e);
+        res.sendStatus(500)
+    }
+});
+
+
+
+
 
 
 

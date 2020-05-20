@@ -198,6 +198,70 @@ primewaterdb.getDetailsOfPayment = (invoiceId)=>{
 };
 
 
+primewaterdb.getTotalInvoices = (customerId)=>{
+
+    return new Promise((resolve, reject) =>{
+    
+            pool.query('SELECT count(*) FROM tbl_invoices WHERE customerId = ?',[customerId], (err, rows)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            return resolve(rows);
+        });
+     });
+
+};
+
+
+primewaterdb.getTotalInvoices = (customerId)=>{
+
+    return new Promise((resolve, reject) =>{
+    
+            pool.query('SELECT count(*) as total FROM tbl_invoices WHERE customerId = ?',[customerId], (err, rows)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            return resolve(rows);
+        });
+     });
+
+};
+
+primewaterdb.getCountPending = (customerId)=>{
+
+    return new Promise((resolve, reject) =>{
+    
+            pool.query('SELECT count(*) as totalPending FROM tbl_invoices WHERE customerId = ? AND invoiceStatus = 0',[customerId], (err, rows)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            return resolve(rows);
+        });
+     });
+
+};
+
+primewaterdb.getCountDone = (customerId)=>{
+
+    return new Promise((resolve, reject) =>{
+    
+            pool.query('SELECT count(*) as totalDone FROM tbl_invoices WHERE customerId = ? AND invoiceStatus = 1',[customerId], (err, rows)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            return resolve(rows);
+        });
+     });
+
+};
+
+
+
+
 
 
 
