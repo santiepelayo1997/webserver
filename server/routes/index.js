@@ -137,7 +137,7 @@ router.get('/invoices/:customerId', async (req,res,next) => {
 
 router.get('/invoices/payments/:invoiceId', async (req,res,next) => {
     try{
-        let results = await db.getDetailsOfPayment([req.params.customerId]);
+        let results = await db.getDetailsOfPayment([req.params.invoiceId]);
         res.json(results);
     }catch(e){
         console.log(e);
