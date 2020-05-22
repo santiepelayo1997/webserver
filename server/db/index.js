@@ -279,7 +279,7 @@ primewaterdb.getLatestInvoice = (customerId)=>{
 primewaterdb.createInvoice = (invoice)=>{
 
     return new Promise((resolve, reject) =>{
-        pool.query("INSERT INTO tbl_invoices (staffId,customerId,previousMeter,presentMeter	,billingStart,billingEnd,dueDate,totalMeter,perCubicPrice,totalAmount,invoiceStatus,dateOfReading,remarks) VALUES (?)",[invoice], (err, results)=>{
+        pool.query("INSERT INTO tbl_invoices (staffId,customerId,previousMeter,presentMeter,billingStart,billingEnd,dueDate,totalMeter,perCubicPrice,totalAmount,invoiceStatus,dateOfReading,remarks) VALUES (?)",[invoice], (err, results)=>{
             if(err){
                 console.log("error: ", err);
                 return reject(err);
