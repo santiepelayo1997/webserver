@@ -177,6 +177,50 @@ router.get('/invoices/pending/:customerId', async (req,res,next) => {
 });
 
 
+router.get('/invoices/reading/:customerId', async (req,res,next) => {
+    try{
+        let results = await db.getLatestInvoice([req.params.customerId]);
+        res.json(results);
+    }catch(e){
+        console.log(e);
+        res.sendStatus(500)
+    }
+});
+
+
+router.post('/invoices', async (req,res,next) => {
+    try{
+        let body = req.body
+        let results = await db.createInvoice([body.staffId,body.customerId,body.previousMeter,body.presentMeter, body.billingStart, body.billingEnd,body.dueDate,body.totalMeter,body.perCubicPrice,body.totalAmount,body.invoiceStatus,body.dateOfReading,body.remarks]);
+        res.status(200).json({
+            message: 'Successfully Created',
+            userDetails: results
+        });
+    
+    }catch(e){
+        console.log(e);
+        res.sendStatus(500)
+    }
+});
+
+
+
+router.put('/invoices/:invoiceId', async (req,res,next) => {
+    try{
+        let body = req.body
+        let results = await db.UpdateInvoice({"staffId": body.staffId, "presentMeter": body.presentMeter, "totalMeter": body.totalMeter, "dateOfReading": body.dateOfReading, "remarks": body.remarks }, req.params.invoiceId);
+        //    res.json(results);   
+        res.send('Updated Successfully!');
+    }catch(e){
+        console.log(e);
+        res.sendStatus(500)
+    }
+});
+
+
+
+
+
 
 
 

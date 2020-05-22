@@ -259,6 +259,55 @@ primewaterdb.getCountDone = (customerId)=>{
 
 };
 
+primewaterdb.getLatestInvoice = (customerId)=>{
+
+    return new Promise((resolve, reject) =>{
+    
+            pool.query('SELECT * FROM tbl_invoices WHERE customerId = ? ORDER BY createdAt DESC LIMIT 1',[customerId], (err, rows)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            return resolve(rows);
+        });
+     });
+
+};
+
+
+
+primewaterdb.createInvoice = (invoice)=>{
+
+    return new Promise((resolve, reject) =>{
+        pool.query("INSERT INTO tbl_invoices (staffId,customerId,previousMeter,presentMeter	,billingStart,billingEnd,dueDate,totalMeter,perCubicPrice,totalAmount,invoiceStatus,dateOfReading,remarks) VALUES (?)",[invoice], (err, results)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            return resolve(results);
+        });
+     });
+
+};
+
+primewaterdb.UpdateInvoice = (array, invoiceId)=>{
+
+    return new Promise((resolve, reject) =>{
+    
+            pool.query("UPDATE tbl_invoices set ? WHERE invoiceId = ?",[array, invoiceId], (err, results)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            console.log(results);  
+            return resolve(results);
+        });
+     });
+
+};
+
+
+
 
 
 
