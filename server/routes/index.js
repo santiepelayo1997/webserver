@@ -106,7 +106,7 @@ router.post('/login',  async (req,res,next) => {
 router.get('/generateCustomerId', async (req,res,next) => {
     try{
         let results = await db.getLastRowCustomer();
-        res.json(results[0].customerId);
+        res.json(results[0]);
     }catch(e){
         console.log(e);
         res.sendStatus(500)
