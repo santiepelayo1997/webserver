@@ -208,7 +208,7 @@ router.post('/invoices', async (req,res,next) => {
 router.put('/invoices/:invoiceId', async (req,res,next) => {
     try{
         let body = req.body
-        let results = await db.UpdateInvoice({"staffId": body.staffId, "presentMeter": body.presentMeter, "totalMeter": body.totalMeter, "dateOfReading": body.dateOfReading, "remarks": body.remarks, "totalAmount": body.totalAmount }, req.params.invoiceId);
+        let results = await db.UpdateInvoice({"staffId": body.staffId, "presentMeter": body.presentMeter, "totalMeter": body.totalMeter, "dateOfReading": body.dateOfReading, "remarks": body.remarks, "totalAmount": body.totalAmount, "endOfReading": body.endOfReading }, req.params.invoiceId);
         //    res.json(results);   
         res.send('Updated Successfully!');
     }catch(e){
