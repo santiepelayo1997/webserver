@@ -187,6 +187,17 @@ router.get('/invoices/reading/:customerId', async (req,res,next) => {
     }
 });
 
+router.get('/invoices/beforeReading/:customerId', async (req,res,next) => {
+    try{
+        let results = await db.getSecondInvoice([req.params.customerId]);
+        res.json(results);
+    }catch(e){
+        console.log(e);
+        res.sendStatus(500)
+    }
+});
+
+
 
 router.post('/invoices', async (req,res,next) => {
     try{

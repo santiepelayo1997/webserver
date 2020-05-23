@@ -306,6 +306,22 @@ primewaterdb.UpdateInvoice = (array, invoiceId)=>{
 
 };
 
+primewaterdb.getSecondInvoice = (customerId)=>{
+
+    return new Promise((resolve, reject) =>{
+    
+            pool.query('SELECT * FROM (SELECT * from tbl_invoices WHERE customerId = ? ORDER BY createdAt DESC LIMIT 2) AS x ORDER BY createdAt LIMIT 1',[customerId], (err, rows)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            return resolve(rows);
+        });
+     });
+
+};
+
+
 
 
 
