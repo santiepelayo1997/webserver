@@ -103,6 +103,23 @@ primewaterdb.update = (test, customerId)=>{
 
 };
 
+
+primewaterdb.loginStaff = (username, password)=>{
+
+    return new Promise((resolve, reject) =>{
+    
+            pool.query("SELECT * FROM tbl_staffs WHERE userName = ? AND password = ?  ",[username, password ], (err, results)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            return resolve(results);
+        });
+     });
+
+};
+
+
 primewaterdb.loginCustomer = (email, password)=>{
 
     return new Promise((resolve, reject) =>{

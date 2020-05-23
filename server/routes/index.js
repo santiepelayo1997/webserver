@@ -80,6 +80,23 @@ router.put('/customers/:customerId', async (req,res,next) => {
     }
 });
 
+router.post('/login/staff',  async (req,res,next) => {
+
+    try{
+        let body = req.body
+        let results = await db.loginStaff(body.username,body.password);
+        if (results.length > 0) {
+            res.status(200).json(results);
+        } else {
+            res.status(400).json({
+                message: 'Incorrect Password/Username!'
+            });
+        }		
+    }catch(e){
+        console.log(e);
+        res.sendStatus(500)
+    }
+});
 
 router.post('/login',  async (req,res,next) => {
 
