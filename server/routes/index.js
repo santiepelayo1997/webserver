@@ -364,7 +364,7 @@ router.post('/api/staff/deactivate/:staffId', cors(), async (req,res,next) => {
 router.post('/api/staff/activate/:staffId', cors(), async (req,res,next) => {
     try{
         let body = req.body
-        let results = await db.deactivateStaff(req.params.staffId);
+        let results = await db.activateStaff(req.params.staffId);
         res.send('Activated Successfully!');
     }catch(e){
         console.log(e);
