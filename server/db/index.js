@@ -94,7 +94,6 @@ primewaterdb.updateCustomer = (test, customerId)=>{
                 console.log("error: ", err);
                 return reject(err);
             }
-            console.log(results);  
             return resolve(results);
         });
      });
@@ -453,12 +452,11 @@ primewaterdb.UpdateStaff = (array, staffId)=>{
 
     return new Promise((resolve, reject) =>{
     
-            pool.query("UPDATE tbl_staffs set ? WHERE staffId = ?",[array, staffId], (err, results)=>{
+            pool.query("UPDATE tbl_staffs set ? WHERE staffId = ?", [array, staffId], (err, results)=>{
             if(err){
                 console.log("error: ", err);
                 return reject(err);
             }
-            console.log(results);  
             return resolve(results);
         });
      });

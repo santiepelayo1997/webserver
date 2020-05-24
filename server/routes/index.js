@@ -332,7 +332,7 @@ router.post('/api/invoices', cors(), async (req,res,next) => {
 
 
 
-router.put('/api/invoices/:invoiceId', cors(), async (req,res,next) => {
+router.put('/api/invoices/:invoiceId', async (req,res,next) => {
     try{
         let body = req.body
         let results = await db.UpdateInvoice({"staffId": body.staffId, "presentMeter": body.presentMeter, "totalMeter": body.totalMeter, "dateOfReading": body.dateOfReading, "remarks": body.remarks, "totalAmount": body.totalAmount, "endOfReading": body.endOfReading }, req.params.invoiceId);
