@@ -14,7 +14,7 @@ const pool = mysql.createPool({
 
 let primewaterdb = {};
 
-primewaterdb.all = () => {
+primewaterdb.tblCustomers = () => {
 
      return new Promise((resolve, reject) =>{
         pool.query('SELECT * FROM tbl_customers', (err, results)=>{
@@ -42,7 +42,7 @@ primewaterdb.tblPayments = () => {
 
 
 
-primewaterdb.one = (customerId)=>{
+primewaterdb.selectSpecificCustomer = (customerId)=>{
 
     return new Promise((resolve, reject) =>{
         pool.query('SELECT * FROM tbl_customers WHERE customerId = ?',[customerId], (err, results)=>{
@@ -85,7 +85,7 @@ primewaterdb.registerCustomer = (customers)=>{
 
 
 
-primewaterdb.update = (test, customerId)=>{
+primewaterdb.updateCustomer = (test, customerId)=>{
 
     console.log(test)
 
@@ -102,6 +102,41 @@ primewaterdb.update = (test, customerId)=>{
      });
 
 };
+
+
+primewaterdb.deactivateCustomer = (customerId)=>{
+
+
+    return new Promise((resolve, reject) =>{
+    
+            pool.query("UPDATE tbl_customers SET status = 0 WHERE customerId = ? ",[customerId], (err, results)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            console.log(results);  
+            return resolve(results);
+        });
+     });
+
+};
+
+primewaterdb.activateCustomer = (customerId)=>{
+
+    return new Promise((resolve, reject) =>{
+    
+            pool.query("UPDATE tbl_customers SET status = 1 WHERE customerId = ? ",[customerId], (err, results)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            console.log(results);  
+            return resolve(results);
+        });
+     });
+
+};
+
 
 
 primewaterdb.loginStaff = (username, password)=>{
@@ -337,6 +372,138 @@ primewaterdb.getSecondInvoice = (customerId)=>{
      });
 
 };
+
+primewaterdb.getAllInvoice = ()=>{
+
+    return new Promise((resolve, reject) =>{
+    
+            pool.query('SELECT tbl_invoices.invoiceId, tbl_invoices.staffId, tbl_invoices.previousMeter,tbl_invoices.presentMeter, tbl_invoices.dueDate, tbl_invoices.billingStart, tbl_invoices.billingEnd, tbl_invoices.totalMeter, tbl_invoices.perCubicPrice, tbl_invoices.totalAmount, tbl_invoices.invoiceStatus, tbl_invoices.dateOfReading, tbl_invoices.endOfReading, tbl_invoices.remarks,tbl_invoices.createdAt, tbl_customers.firstName, tbl_customers.customerId, tbl_customers.lastName, tbl_customers.middleName, tbl_customers.address FROM tbl_invoices LEFT JOIN tbl_customers ON tbl_invoices.customerId = tbl_customers.customerId', (err, rows)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            return resolve(rows);
+        });
+     });
+
+};
+
+
+primewaterdb.getPaymentDetails = ()=>{
+
+    return new Promise((resolve, reject) =>{
+    
+            pool.query('SELECT * FROM tbl_payments LEFT JOIN tbl_invoices ON tbl_invoices.invoiceId = tbl_payments.invoiceId LEFT JOIN tbl_customers ON tbl_customers.customerId = tbl_payments.customerId LEFT JOIN tbl_staffs ON tbl_staffs.staffId = tbl_payments.staffId', (err, rows)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            return resolve(rows);
+        });
+     });
+
+};
+
+
+
+primewaterdb.insertNewPayment = ()=>{
+
+    return new Promise((resolve, reject) =>{
+    
+            pool.query('INSERT INTO tbl_payments (invoiceId, customerId, staffId, pricePerMeter, cashReceived, totalBillingAmount ,discount, penaltyFee, status ) VALUES (?)', (err, rows)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            return resolve(rows);
+        });
+     });
+
+};
+
+primewaterdb.deletePayment = (paymentId)=>{
+
+    return new Promise((resolve, reject) =>{
+    
+            pool.query('DELETE FROM tbl_payments where paymentId = ?', [paymentId], (err, rows)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            return resolve(rows);
+        });
+     });
+};
+
+//STAFF API
+primewaterdb.getAllStaffs = ()=>{
+
+    return new Promise((resolve, reject) =>{
+    
+            pool.query('SELECT * FROM tbl_staffs', (err, rows)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            return resolve(rows);
+        });
+     });
+
+};
+
+primewaterdb.UpdateStaff = (array, staffId)=>{
+
+    return new Promise((resolve, reject) =>{
+    
+            pool.query("UPDATE tbl_staffs set ? WHERE staffId = ?",[array, staffId], (err, results)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            console.log(results);  
+            return resolve(results);
+        });
+     });
+
+};
+
+primewaterdb.deactivateStaff = (staffId)=>{
+
+    return new Promise((resolve, reject) =>{
+    
+            pool.query("UPDATE tbl_staffs SET status = 0 WHERE staffId = ?",[staffId], (err, results)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            console.log(results);  
+            return resolve(results);
+        });
+     });
+
+};
+
+primewaterdb.activateStaff = (staffId)=>{
+
+    return new Promise((resolve, reject) =>{
+    
+            pool.query("UPDATE tbl_staffs SET status = 1 WHERE staffId = ?",[staffId], (err, results)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            console.log(results);  
+            return resolve(results);
+        });
+     });
+
+};
+
+
+
+
+
+
 
 
 

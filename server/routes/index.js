@@ -6,7 +6,7 @@ var cors = require('cors')
 
 router.get('/api/customers/',  cors(), async (req,res,next) => {
         try{
-            let results = await db.all();
+            let results = await db.tblCustomers();
             res.json(results);
         }catch(e){
             console.log(e);
@@ -14,19 +14,19 @@ router.get('/api/customers/',  cors(), async (req,res,next) => {
         }
 });
 
-router.get('/api/payments/',  cors(), async (req,res,next) => {
-    try{
-        let results = await db.tblPayments();
-        res.json(results);
-    }catch(e){
-        console.log(e);
-        res.sendStatus(500)
-    }
-});
+// router.get('/api/payments/',  cors(), async (req,res,next) => {
+//     try{
+//         let results = await db.tblPayments();
+//         res.json(results);
+//     }catch(e){
+//         console.log(e);
+//         res.sendStatus(500)
+//     }
+// });
 
 router.get('/api/customers/:customerId',  cors(), async (req,res,next) => {
     try{
-        let results = await db.one(req.params.customerId);
+        let results = await db.selectSpecificCustomer(req.params.customerId);
         res.json(results);
     }catch(e){
         console.log(e);
@@ -70,7 +70,7 @@ router.post('/api/customers', cors(), async (req,res,next) => {
 router.put('/api/customers/:customerId',  cors(),async (req,res,next) => {
     try{
         let body = req.body
-        let results = await db.update({"image": body.image, "meterNo": body.meterNo}, req.params.customerId);
+        let results = await db.updateCustomer({"image": body.image, "meterNo": body.meterNo,"firstname": body.firstname, "lastname": body.lastname,"middlename": body.middlename, "address": body.address,"email": body.email, "password": body.password,"contactNo": body.contactNo, "birthDate": body.birthDate, "gender": body.gender}, req.params.customerId);
         //    res.json(results);   
         res.send('Updated Successfully!');
     }catch(e){
@@ -78,6 +78,35 @@ router.put('/api/customers/:customerId',  cors(),async (req,res,next) => {
         res.sendStatus(500)
     }
 });
+
+
+router.post('/api/customers/deactivate/:customerId',  cors(),async (req,res,next) => {
+    try{
+        let body = req.body
+        let results = await db.deactivateCustomer(req.params.customerId);
+        //    res.json(results);   
+        res.send('Customer Deactivated Successfully!');
+    }catch(e){
+        console.log(e);
+        res.sendStatus(500)
+    }
+});
+
+
+router.post('/api/customers/activate/:customerId',  cors(),async (req,res,next) => {
+    try{
+        let body = req.body
+        let results = await db.activateCustomer(req.params.customerId);
+        //    res.json(results);   
+        res.send('Customer Activated Successfully!');
+    }catch(e){
+        console.log(e);
+        res.sendStatus(500)
+    }
+});
+
+
+
 
 router.post('/api/login/staff',  cors(), async (req,res,next) => {
 
@@ -213,6 +242,65 @@ router.get('/api/invoices/beforeReading/:customerId',  cors(),async (req,res,nex
     }
 });
 
+router.get('/api/invoices',  cors(),async (req,res,next) => {
+    try{
+        let results = await db.getAllInvoice();
+        res.json(results);
+    }catch(e){
+        console.log(e);
+        res.sendStatus(500)
+    }
+});
+
+router.get('/api/payments',  cors(),async (req,res,next) => {
+    try{
+        let results = await db.getPaymentDetails();
+        res.json(results);
+    }catch(e){
+        console.log(e);
+        res.sendStatus(500)
+    }
+});
+
+
+router.delete('/api/payments/:paymentId',  cors(),async (req,res,next) => {
+    try{
+        let results = await db.deletePayment(req.params.paymentId);
+        res.send('Deleted Successfully!');
+    }catch(e){
+        console.log(e);
+        res.sendStatus(500)
+    }
+});
+
+router.post('/api/payments', cors(), async (req,res,next) => {
+    try{
+        let body = req.body
+        let results = await db.insertNewPayment([body.invoiceId,body.customerId,body.staffId,body.pricePerMeter, body.cashReceived, body.totalBillingAmount,body.discount,body.penaltyFee,body.status]);
+        res.status(200).json(results);
+    
+    }catch(e){
+        console.log(e);
+        res.sendStatus(500)
+    }
+});
+
+
+
+
+
+router.get('/api/staffs',  cors(),async (req,res,next) => {
+    try{
+        let results = await db.getAllStaffs();
+        res.status(200).json(results);
+    }catch(e){
+        console.log(e);
+        res.sendStatus(500)
+    }
+});
+
+
+
 
 
 router.post('/api/invoices', cors(), async (req,res,next) => {
@@ -243,6 +331,50 @@ router.put('/api/invoices/:invoiceId', cors(), async (req,res,next) => {
         res.sendStatus(500)
     }
 });
+
+
+router.put('/api/staff/:staffId', cors(), async (req,res,next) => {
+    try{
+        let body = req.body
+        let results = await db.UpdateStaff({"firstName": body.firstName, "lastName": body.lastName, "userName": body.userName, "address": body.address, "email": body.email, "password": body.password, "contactNo": body.contactNo,"birthDate": body.birthDate, "gender": body.gender }, req.params.staffId);
+        //    res.json(results);   
+        res.send('Updated Successfully!');
+    }catch(e){
+        console.log(e);
+        res.sendStatus(500)
+    }
+});
+
+
+
+router.post('/api/staff/deactivate/:staffId', cors(), async (req,res,next) => {
+    try{
+        let body = req.body
+        let results = await db.deactivateStaff(req.params.staffId);
+        res.send('Deactivated Successfully!');
+    }catch(e){
+        console.log(e);
+        res.sendStatus(500)
+    }
+});
+
+
+router.post('/api/staff/activate/:staffId', cors(), async (req,res,next) => {
+    try{
+        let body = req.body
+        let results = await db.deactivateStaff(req.params.staffId);
+        res.send('Activated Successfully!');
+    }catch(e){
+        console.log(e);
+        res.sendStatus(500)
+    }
+});
+
+
+
+
+
+
 
 
 
