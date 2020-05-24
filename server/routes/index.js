@@ -72,9 +72,9 @@ router.put('/api/customers/:customerId' ,async (req,res,next) => {
    
     try{
         let body = req.body
-        let results = await db.updateCustomer({"image": body.image, "meterNo": body.meterNo,"firstName": body.firstName, "lastname": body.lastname,"middlename": body.middlename, "address": body.address,"email": body.email, "password": body.password,"contactNo": body.contactNo, "birthDate": body.birthDate, "gender": body.gender}, req.params.customerId);
+        let results = await db.updateCustomer({"firstName": body.firstName, "lastName": body.lastName}, req.params.customerId);
         //    res.json(results);   
-        res.send('Updated Successfully!');
+         res.send('Updated Successfully!');
     }catch(e){
         console.log(e);
         res.sendStatus(500)
