@@ -448,6 +448,20 @@ primewaterdb.getAllStaffs = ()=>{
 
 };
 
+primewaterdb.createNewStaff = (array)=>{
+
+    return new Promise((resolve, reject) =>{
+        pool.query("INSERT INTO tbl_staffs (image,firstName,lastName,userName,password,birthDate,address,gender,contactNo,email,status) VALUES (?)",[array], (err, results)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            return resolve(results);
+        });
+     });
+
+};
+
 primewaterdb.UpdateStaff = (array, staffId)=>{
 
     return new Promise((resolve, reject) =>{

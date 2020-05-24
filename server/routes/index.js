@@ -383,6 +383,23 @@ router.post('/api/staff/activate/:staffId', cors(), async (req,res,next) => {
 });
 
 
+router.post('/api/staffs', async (req,res,next) => {
+    try{
+        let body = req.body
+        let results = await db.createNewStaff([body.image,body.firstName,body.lastName,body.userName, body.password, body.birthDate,body.address,body.gender,body.contactNo,body.email,body.status]);
+        res.status(200).json({
+            message: 'Successfully Created',
+            userDetails: results
+        });
+    
+    }catch(e){
+        console.log(e);
+        res.sendStatus(500)
+    }
+});
+
+
+
 
 
 
