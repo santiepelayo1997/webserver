@@ -302,6 +302,16 @@ router.get('/api/staffs',  cors(),async (req,res,next) => {
 });
 
 
+router.get('/api/staffs/:staffId',  cors(),async (req,res,next) => {
+    try{
+        let results = await db.getSpecificStaff(req.params.staffId);
+        res.status(200).json(results);
+    }catch(e){
+        console.log(e);
+        res.sendStatus(500)
+    }
+});
+
 
 
 

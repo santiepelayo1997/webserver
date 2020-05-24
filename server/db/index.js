@@ -469,12 +469,28 @@ primewaterdb.deactivateStaff = (staffId)=>{
 
     return new Promise((resolve, reject) =>{
     
-            pool.query("UPDATE tbl_staffs SET status = 0 WHERE staffId = ?",[staffId], (err, results)=>{
+            pool.query("UPDATE tbl_staffs SET status = 0 WHERE staffId = ?", [staffId], (err, results)=>{
             if(err){
                 console.log("error: ", err);
                 return reject(err);
             }
             console.log(results);  
+            return resolve(results);
+        });
+     });
+
+};
+
+
+primewaterdb.getSpecificStaff = (staffId)=>{
+
+    return new Promise((resolve, reject) =>{
+    
+            pool.query("SELECT * FROM tbl_staffs WHERE staffId = ? ",[staffId], (err, results)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
             return resolve(results);
         });
      });
