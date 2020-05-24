@@ -345,10 +345,10 @@ router.put('/api/invoices/:invoiceId', cors(), async (req,res,next) => {
 });
 
 
-router.put('/api/staff/:staffId', cors(), async (req,res,next) => {
+router.put('/api/staffs/:staffId', cors(), async (req,res,next) => {
     try{
         let body = req.body
-        let results = await db.UpdateStaff({"firstName": body.firstName, "lastName": body.lastName, "userName": body.userName, "address": body.address, "email": body.email, "password": body.password, "contactNo": body.contactNo,"birthDate": body.birthDate, "gender": body.gender }, req.params.staffId);
+        let results = await db.UpdateStaff({"image": body.image, "firstName": body.firstName, "lastName": body.lastName, "userName": body.userName, "birthDate": body.birthDate, "address": body.address, "gender": body.gender, "contactNo": body.contactNo,"email": body.email, "status": 1 }, req.params.staffId);
         //    res.json(results);   
         res.send('Updated Successfully!');
     }catch(e){
