@@ -332,7 +332,7 @@ router.post('/api/invoices', cors(), async (req,res,next) => {
 
 
 
-router.put('/api/invoices/:invoiceId', async (req,res,next) => {
+router.put('/api/invoices/:invoiceId', cors(), async (req,res,next) => {
     try{
         let body = req.body
         let results = await db.UpdateInvoice({"staffId": body.staffId, "presentMeter": body.presentMeter, "totalMeter": body.totalMeter, "dateOfReading": body.dateOfReading, "remarks": body.remarks, "totalAmount": body.totalAmount, "endOfReading": body.endOfReading }, req.params.invoiceId);
@@ -348,7 +348,7 @@ router.put('/api/invoices/:invoiceId', async (req,res,next) => {
 router.put('/api/staffs/:staffId', async (req,res,next) => {
     try{
         let body = req.body
-        let results = await db.UpdateStaff({"image": body.image, "firstName": body.firstName, "lastName": body.lastName, "userName": body.userName, "birthDate": body.birthDate, "address": body.address, "gender": body.gender, "contactNo": body.contactNo,"email": body.email, "status": 1 }, req.params.staffId);
+        let results = await db.UpdateStaff({"image": body.image, "firstName": body.firstName, "lastName": body.lastName, "userName": body.userName, "password": body.password, "birthDate": body.birthDate, "address": body.address, "gender": body.gender, "contactNo": body.contactNo,"email": body.email, "status": 1 }, req.params.staffId);
         //    res.json(results);   
         res.send('Updated Successfully!');
     }catch(e){
