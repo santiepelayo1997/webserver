@@ -3,7 +3,12 @@ const apiRouter = require('./routes')
 const app = express();
 // var http = require('http');
 // var server = http.createServer(app)
-
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
+       next();
+});
 // calling body-parser to handle the Request Object from POST requests
 var bodyParser = require('body-parser');
 // parse application/json, basically parse incoming Request Object as a JSON Object 
@@ -15,8 +20,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 app.use('/', apiRouter);
-
-
 
 // app.use(function(req, res, next) {
 //      res.header("Access-Control-Allow-Origin", "localhost"); // update to match the domain you will make the request from

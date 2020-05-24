@@ -25,6 +25,7 @@ router.get('/api/customers/',  cors(), async (req,res,next) => {
 // });
 
 router.get('/api/customers/:customerId',  cors(), async (req,res,next) => {
+
     try{
         let results = await db.selectSpecificCustomer(req.params.customerId);
         res.json(results);
@@ -67,10 +68,11 @@ router.post('/api/customers', cors(), async (req,res,next) => {
 });
 
 
-router.put('/api/customers/:customerId',  cors(),async (req,res,next) => {
+router.put('/api/customers/:customerId' ,async (req,res,next) => {
+   
     try{
         let body = req.body
-        let results = await db.updateCustomer({"image": body.image, "meterNo": body.meterNo,"firstname": body.firstname, "lastname": body.lastname,"middlename": body.middlename, "address": body.address,"email": body.email, "password": body.password,"contactNo": body.contactNo, "birthDate": body.birthDate, "gender": body.gender}, req.params.customerId);
+        let results = await db.updateCustomer({"image": body.image, "meterNo": body.meterNo,"firstName": body.firstName, "lastname": body.lastname,"middlename": body.middlename, "address": body.address,"email": body.email, "password": body.password,"contactNo": body.contactNo, "birthDate": body.birthDate, "gender": body.gender}, req.params.customerId);
         //    res.json(results);   
         res.send('Updated Successfully!');
     }catch(e){

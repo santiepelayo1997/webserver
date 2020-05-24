@@ -87,8 +87,6 @@ primewaterdb.registerCustomer = (customers)=>{
 
 primewaterdb.updateCustomer = (test, customerId)=>{
 
-    console.log(test)
-
     return new Promise((resolve, reject) =>{
     
             pool.query("UPDATE tbl_customers SET ? WHERE customerId = ? ",[test, customerId], (err, results)=>{
