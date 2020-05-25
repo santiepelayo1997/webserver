@@ -203,7 +203,7 @@ primewaterdb.getPaymentsCustomer = (customerId)=>{
 
     return new Promise((resolve, reject) =>{
     
-            pool.query('SELECT * FROM tbl_payments WHERE customerId = ?',[customerId], (err, rows)=>{
+            pool.query('SELECT * FROM tbl_payments LEFT JOIN tbl_invoices ON tbl_invoices.invoiceId = tbl_payments.invoiceId LEFT JOIN tbl_customers ON tbl_customers.customerId = tbl_payments.customerId LEFT JOIN tbl_staffs ON tbl_staffs.staffId = tbl_payments.staffId WHERE tbl_payments.customerId = ?',[customerId], (err, rows)=>{
             if(err){
                 console.log("error: ", err);
                 return reject(err);
@@ -220,6 +220,38 @@ primewaterdb.getInvoicesCustomer = (customerId)=>{
     return new Promise((resolve, reject) =>{
     
             pool.query('SELECT * FROM tbl_invoices LEFT JOIN tbl_customers ON tbl_invoices.customerId = tbl_customers.customerId WHERE tbl_customers.customerId = ?',[customerId], (err, rows)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            return resolve(rows);
+        });
+     });
+
+};
+
+
+//Invoice 
+primewaterdb.getSpecificInvoice = (invoiceId)=>{
+
+    return new Promise((resolve, reject) =>{
+    
+            pool.query('SELECT * FROM tbl_invoices LEFT JOIN tbl_customers ON tbl_invoices.customerId = tbl_customers.customerId WHERE tbl_invoices.invoiceId = ?',[invoiceId], (err, rows)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            return resolve(rows);
+        });
+     });
+
+};
+
+primewaterdb.getUnpaidBills = (customerId)=>{
+
+    return new Promise((resolve, reject) =>{
+    
+            pool.query('SELECT * FROM tbl_invoices WHERE invoiceStatus = 0 AND customerId = ? ORDER BY invoiceId ASC',[customerId], (err, rows)=>{
             if(err){
                 console.log("error: ", err);
                 return reject(err);
@@ -339,6 +371,22 @@ primewaterdb.createInvoice = (invoice)=>{
 
 };
 
+primewaterdb.UpdateMeter = (array, invoiceId)=>{
+
+    return new Promise((resolve, reject) =>{
+    
+            pool.query("UPDATE tbl_invoices set ? WHERE invoiceId = ?",[array, invoiceId], (err, results)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            console.log(results);  
+            return resolve(results);
+        });
+     });
+
+};
+
 primewaterdb.UpdateInvoice = (array, invoiceId)=>{
 
     return new Promise((resolve, reject) =>{
@@ -374,7 +422,7 @@ primewaterdb.getAllInvoice = ()=>{
 
     return new Promise((resolve, reject) =>{
     
-            pool.query('SELECT tbl_invoices.invoiceId, tbl_invoices.staffId, tbl_invoices.previousMeter,tbl_invoices.presentMeter, tbl_invoices.dueDate, tbl_invoices.billingStart, tbl_invoices.billingEnd, tbl_invoices.totalMeter, tbl_invoices.perCubicPrice, tbl_invoices.totalAmount, tbl_invoices.invoiceStatus, tbl_invoices.dateOfReading, tbl_invoices.endOfReading, tbl_invoices.remarks,tbl_invoices.createdAt, tbl_customers.firstName, tbl_customers.customerId, tbl_customers.lastName, tbl_customers.middleName, tbl_customers.address FROM tbl_invoices LEFT JOIN tbl_customers ON tbl_invoices.customerId = tbl_customers.customerId', (err, rows)=>{
+            pool.query('SELECT tbl_invoices.invoiceId, tbl_invoices.staffId, tbl_staffs.firstName as staffFirstName, tbl_staffs.lastName as staffLastName, tbl_invoices.previousMeter,tbl_invoices.presentMeter, tbl_invoices.dueDate, tbl_invoices.billingStart, tbl_invoices.billingEnd, tbl_invoices.totalMeter, tbl_invoices.perCubicPrice, tbl_invoices.totalAmount, tbl_invoices.invoiceStatus, tbl_invoices.dateOfReading, tbl_invoices.endOfReading, tbl_invoices.remarks,tbl_invoices.createdAt, tbl_customers.firstName, tbl_customers.customerId,  tbl_customers.meterNo,  tbl_customers.lastName, tbl_customers.middleName, tbl_customers.address FROM tbl_invoices LEFT JOIN tbl_customers ON tbl_invoices.customerId = tbl_customers.customerId LEFT JOIN tbl_staffs ON tbl_invoices.staffId = tbl_staffs.staffId', (err, rows)=>{
             if(err){
                 console.log("error: ", err);
                 return reject(err);
@@ -402,12 +450,28 @@ primewaterdb.getPaymentDetails = ()=>{
 };
 
 
-
-primewaterdb.insertNewPayment = ()=>{
+primewaterdb.getSpecificPayment = (paymentId)=>{
 
     return new Promise((resolve, reject) =>{
     
-            pool.query('INSERT INTO tbl_payments (invoiceId, customerId, staffId, pricePerMeter, cashReceived, totalBillingAmount ,discount, penaltyFee, status ) VALUES (?)', (err, rows)=>{
+            pool.query('SELECT * FROM tbl_payments LEFT JOIN tbl_invoices ON tbl_invoices.invoiceId = tbl_payments.invoiceId LEFT JOIN tbl_customers ON tbl_customers.customerId = tbl_payments.customerId LEFT JOIN tbl_staffs ON tbl_staffs.staffId = tbl_payments.staffId WHERE tbl_payments.paymentId = ?',[paymentId], (err, rows)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            return resolve(rows);
+        });
+     });
+
+};
+
+
+
+primewaterdb.insertNewPayment = (array)=>{
+
+    return new Promise((resolve, reject) =>{
+    
+            pool.query('INSERT INTO tbl_payments (invoiceId, customerId, staffId, pricePerMeter, cashReceived, totalBillingAmount ,discount, penaltyFee, remarks, status ) VALUES (?)',[array], (err, rows)=>{
             if(err){
                 console.log("error: ", err);
                 return reject(err);
@@ -431,6 +495,21 @@ primewaterdb.deletePayment = (paymentId)=>{
         });
      });
 };
+
+primewaterdb.getPendingInvoices = ()=>{
+
+    return new Promise((resolve, reject) =>{
+    
+            pool.query('SELECT * FROM tbl_invoices WHERE invoiceStatus = 0 ORDER BY invoiceId ASC', (err, rows)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            return resolve(rows);
+        });
+     });
+};
+
 
 //STAFF API
 primewaterdb.getAllStaffs = ()=>{
@@ -524,6 +603,163 @@ primewaterdb.activateStaff = (staffId)=>{
      });
 
 };
+
+
+primewaterdb.checkIfPaymentIsAlreadyExist = (invoiceId)=>{
+
+    return new Promise((resolve, reject) =>{
+    
+            pool.query('SELECT * FROM tbl_payments WHERE invoiceId = ?',[invoiceId], (err, rows)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            return resolve(rows);
+        });
+     });
+
+};
+
+
+primewaterdb.createPayments = (array)=>{
+
+    return new Promise((resolve, reject) =>{
+        pool.query("INSERT INTO tbl_payments (customerId,invoiceId,staffId,pricePerMeter,discount,penaltyFee,cashReceived,totalBillingAmount,remarks,status) VALUES (?)",[array], (err, results)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            return resolve(results);
+        });
+     });
+
+};
+
+
+
+primewaterdb.countCustomer = (array)=>{
+
+    return new Promise((resolve, reject) =>{
+        pool.query("SELECT count(*) as countOfCustomer FROM tbl_customers WHERE status = 1", (err, results)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            return resolve(results);
+        });
+     });
+
+};
+
+
+primewaterdb.countStaff = (array)=>{
+
+    return new Promise((resolve, reject) =>{
+        pool.query("SELECT count(*) as countStaff FROM tbl_staffs WHERE status = 1", (err, results)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            return resolve(results);
+        });
+     });
+
+};
+
+
+primewaterdb.countPendingInvoice = ()=>{
+
+    return new Promise((resolve, reject) =>{
+        pool.query("SELECT count(*) as totalPending FROM tbl_invoices WHERE invoiceStatus = 0", (err, results)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            return resolve(results);
+        });
+     });
+
+};
+
+
+primewaterdb.countPendingInvoiceCustomer = (customerId)=>{
+
+    return new Promise((resolve, reject) =>{
+        pool.query("SELECT count(*) as totalPending FROM tbl_invoices WHERE invoiceStatus = 0 AND customerId = ? ", [customerId], (err, results)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            return resolve(results);
+        });
+     });
+
+};
+
+primewaterdb.countTotalInvoices = (customerId)=>{
+
+    return new Promise((resolve, reject) =>{
+        pool.query("SELECT count(*) as totalTransaction FROM tbl_invoices WHERE customerId = ? ", [customerId], (err, results)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            return resolve(results);
+        });
+     });
+
+};
+
+
+primewaterdb.getTotalSales = (array)=>{
+
+    return new Promise((resolve, reject) =>{
+        pool.query("SELECT SUM(totalBillingAmount) as totals FROM tbl_payments WHERE status = 1", (err, results)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            return resolve(results);
+        });
+     });
+
+};
+
+primewaterdb.getTotalBillingCustomer = (customerId)=>{
+
+    return new Promise((resolve, reject) =>{
+        pool.query("SELECT SUM(totalBillingAmount) as totals FROM tbl_payments WHERE status = 1 AND customerId = ?", [customerId], (err, results)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            return resolve(results);
+        });
+     });
+
+};
+
+
+
+primewaterdb.adminLogin = (username, password)=>{
+
+    return new Promise((resolve, reject) =>{
+        pool.query("SELECT * FROM tbl_admin WHERE username= ? and password = ?", [username, password] , (err, results)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            return resolve(results);
+        });
+     });
+
+};
+
+
+
+
+
+
 
 
 

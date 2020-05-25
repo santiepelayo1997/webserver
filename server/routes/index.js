@@ -128,7 +128,7 @@ router.post('/api/login/staff',  cors(), async (req,res,next) => {
     }
 });
 
-router.post('/api/login',   cors(),async (req,res,next) => {
+router.post('/api/login',async (req,res,next) => {
 
     try{
         let body = req.body
@@ -223,6 +223,17 @@ router.get('/api/invoices/pending/:customerId', cors(), async (req,res,next) => 
     }
 });
 
+router.get('/api/getPending', cors(), async (req,res,next) => {
+    try{
+        let results = await db.getPendingInvoices();
+        res.json(results);
+    }catch(e){
+        console.log(e);
+        res.sendStatus(500)
+    }
+});
+
+
 
 router.get('/api/invoices/reading/:customerId',  cors(),async (req,res,next) => {
     try{
@@ -257,6 +268,17 @@ router.get('/api/invoices',  cors(),async (req,res,next) => {
 router.get('/api/payments',  cors(),async (req,res,next) => {
     try{
         let results = await db.getPaymentDetails();
+        res.json(results);
+    }catch(e){
+        console.log(e);
+        res.sendStatus(500)
+    }
+});
+
+
+router.get('/api/payments/getSpecific/:paymentId',  cors(),async (req,res,next) => {
+    try{
+        let results = await db.getSpecificPayment(req.params.paymentId);
         res.json(results);
     }catch(e){
         console.log(e);
@@ -315,6 +337,7 @@ router.get('/api/staffs/:staffId',  cors(),async (req,res,next) => {
 
 
 
+
 router.post('/api/invoices', cors(), async (req,res,next) => {
     try{
         let body = req.body
@@ -331,11 +354,22 @@ router.post('/api/invoices', cors(), async (req,res,next) => {
 });
 
 
-
-router.put('/api/invoices/:invoiceId', cors(), async (req,res,next) => {
+router.put('/api/invoices/updatemeter/:invoiceId',async (req,res,next) => {
     try{
         let body = req.body
-        let results = await db.UpdateInvoice({"staffId": body.staffId, "presentMeter": body.presentMeter, "totalMeter": body.totalMeter, "dateOfReading": body.dateOfReading, "remarks": body.remarks, "totalAmount": body.totalAmount, "endOfReading": body.endOfReading }, req.params.invoiceId);
+        let results = await db.UpdateMeter({"presentMeter": body.presentMeter, "totalMeter": body.totalMeter, "totalAmount": body.totalAmount}, req.params.invoiceId);
+        //    res.json(results);   
+        res.send('Updated Successfully!');
+    }catch(e){
+        console.log(e);
+        res.sendStatus(500)
+    }
+});
+
+router.put('/api/invoices/:invoiceId', async (req,res,next) => {
+    try{
+        let body = req.body
+        let results = await db.UpdateInvoice({"staffId": body.staffId, "presentMeter": body.presentMeter, "totalMeter": body.totalMeter, "dateOfReading": body.dateOfReading, "remarks": body.remarks, "totalAmount": body.totalAmount, "endOfReading": body.endOfReading , "invoiceStatus": body.invoiceStatus}, req.params.invoiceId);
         //    res.json(results);   
         res.send('Updated Successfully!');
     }catch(e){
@@ -397,6 +431,148 @@ router.post('/api/staffs', async (req,res,next) => {
         res.sendStatus(500)
     }
 });
+
+
+router.get('/api/invoices/specific/:invoiceId',  cors(),async (req,res,next) => {
+    try{
+        let results = await db.getSpecificInvoice(req.params.invoiceId);
+        res.status(200).json(results);
+    }catch(e){
+        console.log(e);
+        res.sendStatus(500)
+    }
+});
+
+router.get('/api/invoices/unpaid/:customerId',  cors(),async (req,res,next) => {
+    try{
+        let results = await db.getUnpaidBills(req.params.customerId);
+        res.status(200).json(results);
+    }catch(e){
+        console.log(e);
+        res.sendStatus(500)
+    }
+});
+
+
+router.post('/api/payments/check',  async (req,res,next) => {
+    try{
+      
+        let ifValid = await db.checkIfPaymentIsAlreadyExist(req.body.invoiceId);
+        if (!ifValid.length) {
+            let body = req.body
+            let results = await db.insertNewPayment([body.invoiceId,body.customerId,body.staffId,body.pricePerMeter, body.cashReceived, body.totalBillingAmount,body.discount,body.penaltyFee, body.remarks, body.status]);
+            res.status(200).json(results);
+        }else{
+            res.status(400).json({
+                message: 'Payment Already Exist!'
+            });
+        }
+    }catch(e){
+        console.log(e);
+        res.sendStatus(500)
+    }
+});
+
+router.get('/api/customerCount',  cors(),async (req,res,next) => {
+    try{
+        let results = await db.countCustomer();
+        res.status(200).json(results);
+    }catch(e){
+        console.log(e);
+        res.sendStatus(500)
+    }
+});
+
+
+router.get('/api/staffCount',  cors(),async (req,res,next) => {
+    try{
+        let results = await db.countStaff();
+        res.status(200).json(results);
+    }catch(e){
+        console.log(e);
+        res.sendStatus(500)
+    }
+});
+
+
+router.get('/api/countPendingInvoiceCustomer/:customerId', async (req,res,next) => {
+    try{
+        let results = await db.countPendingInvoiceCustomer(req.params.customerId);
+        res.status(200).json(results);
+    }catch(e){
+        console.log(e);
+        res.sendStatus(500)
+    }
+});
+
+
+router.get('/api/totalInvoice/:customerId', async (req,res,next) => {
+    try{
+        let results = await db.countTotalInvoices(req.params.customerId);
+        res.status(200).json(results);
+    }catch(e){
+        console.log(e);
+        res.sendStatus(500)
+    }
+});
+
+
+router.get('/api/pendingInvoiceCount',  cors(),async (req,res,next) => {
+    try{
+        let results = await db.countPendingInvoice();
+        res.status(200).json(results);
+    }catch(e){
+        console.log(e);
+        res.sendStatus(500)
+    }
+});
+
+
+
+
+router.get('/api/getTotalSales',  cors(),async (req,res,next) => {
+    try{
+        let results = await db.getTotalSales();
+        res.status(200).json(results);
+    }catch(e){
+        console.log(e);
+        res.sendStatus(500)
+    }
+});
+
+
+
+router.get('/api/getTotalBillingCustomer/:customerId',  cors(),async (req,res,next) => {
+    try{
+        let results = await db.getTotalBillingCustomer(req.params.customerId);
+        res.status(200).json(results);
+    }catch(e){
+        console.log(e);
+        res.sendStatus(500)
+    }
+});
+
+router.post('/api/login/admin',  async (req,res,next) => {
+
+    try{
+        let body = req.body
+        let results = await db.adminLogin(body.username,body.password);
+        if (results.length > 0) {
+            res.status(200).json(results);
+        } else {
+            res.status(400).json({
+                message: 'Incorrect Password/Username!'
+            });
+        }		
+    }catch(e){
+        console.log(e);
+        res.sendStatus(500)
+    }
+});
+
+
+
+
 
 
 
