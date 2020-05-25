@@ -369,7 +369,7 @@ router.put('/api/invoices/updatemeter/:invoiceId',async (req,res,next) => {
 router.put('/api/invoices/updateInvoice/:invoiceId', async (req,res,next) => {
     try{
         let body = req.body
-        let results = await db.UpdateInvoice({"staffId": body.staffId, "presentMeter": body.presentMeter, "totalMeter": body.totalMeter, "dateOfReading": body.dateOfReading, "remarks": body.remarks, "totalAmount": body.totalAmount, "endOfReading": body.endOfReading , "invoiceStatus": body.invoiceStatus}, req.params.invoiceId);
+        let results = await db.UpdateInvoice({"staffId": body.staffId, "presentMeter": body.presentMeter, "totalMeter": body.totalMeter, "dateOfReading": body.dateOfReading, "remarks": body.remarks, "totalAmount": body.totalAmount, "endOfReading": body.endOfReading , "invoiceStatus": 0}, req.params.invoiceId);
         //    res.json(results);   
         res.send('Updated Successfully!');
     }catch(e){
