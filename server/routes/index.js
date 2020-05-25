@@ -454,9 +454,8 @@ router.get('/api/invoices/unpaid/:customerId',  cors(),async (req,res,next) => {
 });
 
 
-router.post('/api/payments/check',  async (req,res,next) => {
+router.post('/api/checkPayment',  async (req,res,next) => {
     try{
-      
         let ifValid = await db.checkIfPaymentIsAlreadyExist(req.body.invoiceId);
         if (!ifValid.length) {
             let body = req.body
