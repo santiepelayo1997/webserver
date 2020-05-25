@@ -341,7 +341,7 @@ router.get('/api/staffs/:staffId',  cors(),async (req,res,next) => {
 router.post('/api/invoices', cors(), async (req,res,next) => {
     try{
         let body = req.body
-        let results = await db.createInvoice([body.staffId,body.customerId,body.previousMeter,body.presentMeter, body.billingStart, body.billingEnd,body.dueDate,body.totalMeter,body.perCubicPrice,body.totalAmount,body.invoiceStatus,body.dateOfReading,body.remarks]);
+        let results = await db.createInvoice([body.staffId,body.customerId,body.previousMeter,body.presentMeter, body.billingStart, body.billingEnd,body.dueDate,body.totalMeter,body.perCubicPrice,body.totalAmount,body.invoiceStatus,body.dateOfReading,body.remarks, body.invoiceStatus]);
         res.status(200).json({
             message: 'Successfully Created',
             userDetails: results
