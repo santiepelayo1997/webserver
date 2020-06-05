@@ -379,6 +379,19 @@ router.put('/api/invoices/updateInvoice/:invoiceId', async (req,res,next) => {
 });
 
 
+router.put('/api/invoices/setToDone/:invoiceId', async (req,res,next) => {
+    try{
+        let body = req.body
+        let results = await db.UpdateInvoiceSetToDone({"invoiceStatus": body.invoiceStatus}, req.params.invoiceId);
+        //    res.json(results);   
+        res.send('Updated Successfully!');
+    }catch(e){
+        console.log(e);
+        res.sendStatus(500)
+    }
+});
+
+
 router.put('/api/staffs/:staffId', async (req,res,next) => {
     try{
         let body = req.body

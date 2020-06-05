@@ -400,7 +400,21 @@ primewaterdb.UpdateInvoice = (array, invoiceId)=>{
             return resolve(results);
         });
      });
+};
 
+primewaterdb.UpdateInvoiceSetToDone= (array, invoiceId)=>{
+
+    return new Promise((resolve, reject) =>{
+    
+            pool.query("UPDATE tbl_invoices set ? WHERE invoiceId = ?",[array, invoiceId], (err, results)=>{
+            if(err){
+                console.log("error: ", err);
+                return reject(err);
+            }
+            console.log(results);  
+            return resolve(results);
+        });
+     });
 };
 
 primewaterdb.getSecondInvoice = (customerId)=>{
