@@ -438,7 +438,7 @@ primewaterdb.getPaymentDetails = ()=>{
 
     return new Promise((resolve, reject) =>{
     
-            pool.query('SELECT tbl_payments.paymentId, tbl_customers.firstName, tbl_customers.lastName, tbl_customers.middleName, tbl_payments.invoiceId, tbl_invoices.dueDate,tbl_customers.customerId, tbl_invoices.previousMeter,tbl_invoices.previousMeter,tbl_invoices.totalMeter,tbl_invoices.totalAmount, tbl_invoices.perCubicPrice,tbl_payments.cashReceived,tbl_payments.totalBillingAmount,tbl_payments.discount,tbl_payments.penaltyFee,tbl_payments.remarks,tbl_payments.createdAt,tbl_payments.status,tbl_invoices.invoiceStatus FROM tbl_payments LEFT JOIN tbl_invoices ON tbl_invoices.invoiceId = tbl_payments.invoiceId LEFT JOIN tbl_customers ON tbl_customers.customerId = tbl_payments.customerId LEFT JOIN tbl_staffs ON tbl_staffs.staffId = tbl_payments.staffId', (err, rows)=>{
+            pool.query('SELECT tbl_payments.paymentId, tbl_customers.firstName, tbl_customers.lastName, tbl_customers.middleName, tbl_payments.invoiceId, tbl_invoices.dueDate,tbl_customers.customerId, tbl_invoices.presentMeter,tbl_invoices.previousMeter,tbl_invoices.totalMeter,tbl_invoices.totalAmount, tbl_invoices.perCubicPrice,tbl_payments.cashReceived,tbl_payments.totalBillingAmount,tbl_payments.discount,tbl_payments.penaltyFee,tbl_payments.remarks,tbl_payments.createdAt,tbl_payments.status,tbl_invoices.invoiceStatus FROM tbl_payments LEFT JOIN tbl_invoices ON tbl_invoices.invoiceId = tbl_payments.invoiceId LEFT JOIN tbl_customers ON tbl_customers.customerId = tbl_payments.customerId LEFT JOIN tbl_staffs ON tbl_staffs.staffId = tbl_payments.staffId', (err, rows)=>{
             if(err){
                 console.log("error: ", err);
                 return reject(err);
