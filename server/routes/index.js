@@ -395,7 +395,7 @@ router.put('/api/invoices/setToDone/:invoiceId', async (req,res,next) => {
 router.put('/api/staffs/:staffId', async (req,res,next) => {
     try{
         let body = req.body
-        let results = await db.UpdateStaff({"image": body.image, "firstName": body.firstName, "lastName": body.lastName, "userName": body.userName, "password": body.password, "birthDate": body.birthDate, "address": body.address, "gender": body.gender, "contactNo": body.contactNo,"email": body.email, "status": 1 }, req.params.staffId);
+        let results = await db.UpdateStaff({"image": body.image, "firstName": body.firstName,"middleName": body.middleName, "lastName": body.lastName, "userName": body.userName, "password": body.password, "birthDate": body.birthDate, "address": body.address, "gender": body.gender, "contactNo": body.contactNo,"email": body.email, "status": 1 }, req.params.staffId);
         //    res.json(results);   
         res.send('Updated Successfully!');
     }catch(e){
@@ -433,7 +433,7 @@ router.post('/api/staff/activate/:staffId', cors(), async (req,res,next) => {
 router.post('/api/staffs', async (req,res,next) => {
     try{
         let body = req.body
-        let results = await db.createNewStaff([body.image,body.firstName,body.lastName,body.userName, body.password, body.birthDate,body.address,body.gender,body.contactNo,body.email,body.status]);
+        let results = await db.createNewStaff([body.image,body.firstName,body.middleName,body.lastName,body.userName, body.password, body.birthDate,body.address,body.gender,body.contactNo,body.email,body.status]);
         res.status(200).json({
             message: 'Successfully Created',
             userDetails: results
