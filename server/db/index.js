@@ -530,7 +530,7 @@ primewaterdb.getAllStaffs = ()=>{
 
     return new Promise((resolve, reject) =>{
     
-            pool.query('SELECT staffId,image,firstName,lastName,userName,PASSWORD(password),birthDate,address,gender,contactNo,email,status,createdAt FROM tbl_staffs', (err, rows)=>{
+            pool.query('SELECT staffId,image,firstName,middleName,lastName,userName,PASSWORD(password),birthDate,address,gender,contactNo,email,status,createdAt FROM tbl_staffs', (err, rows)=>{
             if(err){
                 console.log("error: ", err);
                 return reject(err);
@@ -544,7 +544,7 @@ primewaterdb.getAllStaffs = ()=>{
 primewaterdb.createNewStaff = (array)=>{
 
     return new Promise((resolve, reject) =>{
-        pool.query("INSERT INTO tbl_staffs (image,firstName,lastName,userName,password,birthDate,address,gender,contactNo,email,status) VALUES (?)",[array], (err, results)=>{
+        pool.query("INSERT INTO tbl_staffs (image,firstName,middleName,lastName,userName,password,birthDate,address,gender,contactNo,email,status) VALUES (?)",[array], (err, results)=>{
             if(err){
                 console.log("error: ", err);
                 return reject(err);
