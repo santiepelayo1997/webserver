@@ -530,7 +530,7 @@ primewaterdb.getAllStaffs = ()=>{
 
     return new Promise((resolve, reject) =>{
     
-            pool.query('SELECT staffId,image,firstName,lastName,userName,PASSWORD(password),birthDate,address,gender,contactNo,email,status,createdAt FROM tbl_staffs', (err, rows)=>{
+            pool.query('SELECT staffId,image,firstName,middleName,lastName,userName,PASSWORD(password),birthDate,address,gender,contactNo,email,status,createdAt FROM tbl_staffs', (err, rows)=>{
             if(err){
                 console.log("error: ", err);
                 return reject(err);
