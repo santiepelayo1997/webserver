@@ -17,7 +17,7 @@ let primewaterdb = {};
 primewaterdb.tblCustomers = () => {
 
      return new Promise((resolve, reject) =>{
-        pool.query('SELECT * FROM tbl_customers', (err, results)=>{
+        pool.query('SELECT customerId,image,meterNo,startMeter,startDate,firstName,middleName,lastName,gender,birthDate,address,locationCode,contactNo,email,PASSWORD(password), status, createdAt FROM tbl_customers', (err, results)=>{
             if(err){
                 return reject(err);
             }
