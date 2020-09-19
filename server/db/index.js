@@ -5,7 +5,7 @@ const pool = mysql.createPool({
     connectionLimit: 10,
     password: '',
     user: 'root',
-    database: 'primewaterdb',
+    database: 'u803834006_primewaterdb',
     host: 'localhost',
     port: '3306'
 });
@@ -43,7 +43,7 @@ primewaterdb.tblPayments = () => {
 primewaterdb.selectTransactionHistory = (customerId)=>{
 
     return new Promise((resolve, reject) =>{
-        pool.query('SELECT * FROM tbl_payments LEFT JOIN tbl_invoices ON tbl_payments.invoiceId = tbl_invoices.invoiceId WHERE tbl_payments.customerId = ?',[customerId], (err, results)=>{
+        pool.query('SELECT * FROM tbl_payments LEFT JOIN tbl_customers ON tbl_customers.customerId = tbl_payments.customerId LEFT JOIN tbl_invoices ON tbl_payments.invoiceId = tbl_invoices.invoiceId WHERE tbl_payments.customerId = ?',[customerId], (err, results)=>{
             if(err){
                 return reject(err);
             }
