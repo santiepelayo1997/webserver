@@ -456,6 +456,18 @@ router.get('/api/invoices/specific/:invoiceId',  cors(),async (req,res,next) => 
     }
 });
 
+
+router.get('/api/transactionHistory/:customerId',  cors(),async (req,res,next) => {
+    try{
+        let results = await db.selectTransactionHistory(req.params.customerId);
+        res.status(200).json(results);
+    }catch(e){
+        console.log(e);
+        res.sendStatus(500)
+    }
+});
+
+
 router.get('/api/invoices/unpaid/:customerId',  cors(),async (req,res,next) => {
     try{
         let results = await db.getUnpaidBills(req.params.customerId);

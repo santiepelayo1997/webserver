@@ -40,7 +40,18 @@ primewaterdb.tblPayments = () => {
 
 };
 
+primewaterdb.selectTransactionHistory = (customerId)=>{
 
+    return new Promise((resolve, reject) =>{
+        pool.query('SELECT * FROM tbl_payments LEFT JOIN tbl_invoices ON tbl_payments.invoiceId = tbl_invoices.invoiceId WHERE tbl_payments.customerId = ?',[customerId], (err, results)=>{
+            if(err){
+                return reject(err);
+            }
+            return resolve(results[0]);
+        });
+     });
+
+};
 
 primewaterdb.selectSpecificCustomer = (customerId)=>{
 
